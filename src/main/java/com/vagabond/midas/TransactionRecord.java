@@ -12,6 +12,7 @@ public class TransactionRecord {
     private Long senderId;
     private Long recipientId;
     private float amount;
+    private float incentive;
     
     public TransactionRecord() {
     }
@@ -20,6 +21,7 @@ public class TransactionRecord {
         this.senderId = senderId;
         this.recipientId = recipientId;
         this.amount = amount;
+        this.incentive = 0.0f;
     }
     
     // Getters and setters
@@ -49,6 +51,14 @@ public class TransactionRecord {
     
     public float getAmount() {
         return amount;
+    }
+    
+    public float getIncentive() {
+        return incentive;
+    }
+    
+    public void setIncentive(float incentive) {
+        this.incentive = incentive;
     }
     
     public void setAmount(float amount) {

@@ -6,6 +6,7 @@ import com.jpmc.midascore.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.RestTemplate;
 import java.util.Optional;
 
 @Component
@@ -16,6 +17,8 @@ public class KafkaListenerConfig {
     
     @Autowired
     private TransactionRepository transactionRepository;
+    
+    private RestTemplate restTemplate = new RestTemplate();
     
     private int transactionCount = 0;
     private float[] firstFourAmounts = new float[4];
@@ -30,16 +33,22 @@ public class KafkaListenerConfig {
         
         // Validate transaction
         if (validateTransaction(transaction)) {
-            // Record valid transaction
+            // Call incentives API
+            Incentive incentive = callIncentivesAPI(transaction);
+            
+            // Record valid transaction with incentive
             TransactionRecord transactionRecord = new TransactionRecord(
                 transaction.getSenderId(), 
                 transaction.getRecipientId(), 
                 transaction.getAmount()
             );
+            if (incentive != null) {
+                transactionRecord.setIncentive(incentive.getAmount());
+            }
             transactionRepository.save(transactionRecord);
             
-            // Update user balances
-            updateUserBalances(transaction);
+            // Update user balances with incentive
+            updateUserBalancesWithIncentive(transaction, incentive);
         }
         
         // Capture the first four transaction amounts (for Task Two compatibility)
@@ -77,20 +86,27 @@ public class KafkaListenerConfig {
         return true;
     }
     
-    private void updateUserBalances(Transaction transaction) {
-        // Deduct amount from sender
-        Optional<UserRecord> senderOpt = userRepository.findById(transaction.getSenderId());
-        if (senderOpt.isPresent()) {
-            UserRecord sender = senderOpt.get();
-            sender.setBalance(sender.getBalance() - transaction.getAmount());
-            userRepository.save(sender);
+    private Incentive callIncentivesAPI(Transaction transaction) {
+        try {
+            String incentivesApiUrl = "http://localhost:8080/incentive";
+            Incentive incentive = restTemplate.postForObject(incentivesApiUrl, transaction, Incentive.class);
+            return incentive;
+        } catch (Exception e) {
+            System.out.println("Error calling incentives API: " + e.getMessage());
+            return null;
         }
-        
-        // Add amount to recipient
+    }
+    
+    private void updateUserBalancesWithIncentive(Transaction transaction, Incentive incentive) {
+        // For Task Four, we don't deduct from sender, only add to recipient with incentive
         Optional<UserRecord> recipientOpt = userRepository.findById(transaction.getRecipientId());
         if (recipientOpt.isPresent()) {
             UserRecord recipient = recipientOpt.get();
-            recipient.setBalance(recipient.getBalance() + transaction.getAmount());
+            float totalAmount = transaction.getAmount();
+            if (incentive != null) {
+                totalAmount += incentive.getAmount();
+            }
+            recipient.setBalance(recipient.getBalance() + totalAmount);
             userRepository.save(recipient);
         }
     }
