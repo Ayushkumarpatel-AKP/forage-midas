@@ -3,6 +3,7 @@ package com.vagabond.midas;
 import com.jpmc.midascore.foundation.Transaction;
 import com.jpmc.midascore.entity.UserRecord;
 import com.jpmc.midascore.repository.UserRepository;
+import com.vagabond.midas.Incentive;
 import org.springframework.web.client.RestTemplate;
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -40,16 +41,16 @@ public class TaskFourProcessor {
     }
     
     private void initializeUsers() {
-        users.put(1L, new UserRecord(1L, "wilbur", 1000));
-        users.put(2L, new UserRecord(2L, "wooster", 1000));
-        users.put(3L, new UserRecord(3L, "wiggly", 1000));
-        users.put(4L, new UserRecord(4L, "waldorf", 1000));
-        users.put(5L, new UserRecord(5L, "wizard", 1000));
-        users.put(6L, new UserRecord(6L, "wozniak", 1000));
-        users.put(7L, new UserRecord(7L, "wanda", 1000));
-        users.put(8L, new UserRecord(8L, "washington", 1000));
-        users.put(9L, new UserRecord(9L, "waterloo", 1000));
-        users.put(10L, new UserRecord(10L, "wiggy", 1000));
+        users.put(1L, new UserRecord("wilbur", 1000));
+        users.put(2L, new UserRecord("wooster", 1000));
+        users.put(3L, new UserRecord("wiggly", 1000));
+        users.put(4L, new UserRecord("waldorf", 1000));
+        users.put(5L, new UserRecord("wizard", 1000));
+        users.put(6L, new UserRecord("wozniak", 1000));
+        users.put(7L, new UserRecord("wanda", 1000));
+        users.put(8L, new UserRecord("washington", 1000));
+        users.put(9L, new UserRecord("waterloo", 1000));
+        users.put(10L, new UserRecord("wiggy", 1000));
     }
     
     private void processTransactions() {

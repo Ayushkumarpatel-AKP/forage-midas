@@ -1,3 +1,5 @@
+package com.vagabond.midas;
+
 import com.jpmc.midascore.foundation.Transaction;
 import com.jpmc.midascore.entity.UserRecord;
 import com.vagabond.midas.Incentive;
@@ -43,7 +45,8 @@ public class TaskFourRunner {
     }
     
     private void initializeUsers() {
-        users.put(1L, new UserRecord("wilbur", 1000));
+        UserRecord wilbur = new UserRecord("wilbur", 1000);
+        users.put(1L, wilbur);
         users.put(2L, new UserRecord("wooster", 1000));
         users.put(3L, new UserRecord("wiggly", 1000));
         users.put(4L, new UserRecord("waldorf", 1000));
