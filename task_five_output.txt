@@ -1,0 +1,15 @@
+---begin output ---
+Balance {amount=0.0}
+Balance {amount=1191.0}
+Balance {amount=1444.0}
+Balance {amount=966.0}
+Balance {amount=1128.0}
+Balance {amount=501.0}
+Balance {amount=956.0}
+Balance {amount=1037.0}
+Balance {amount=780.0}
+Balance {amount=957.0}
+Balance {amount=1035.0}
+Balance {amount=0.0}
+Balance {amount=0.0}
+---end output ---
